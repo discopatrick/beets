@@ -18,6 +18,7 @@
 from __future__ import division, absolute_import, print_function
 
 import re
+import logging
 from operator import mul
 from beets import util
 from datetime import datetime, timedelta
@@ -27,6 +28,8 @@ import six
 
 if not six.PY2:
     buffer = memoryview  # sqlite won't accept memoryview in python 2
+
+logging.basicConfig(filename='debug.log',level=logging.DEBUG)
 
 
 class ParsingError(ValueError):
@@ -732,6 +735,11 @@ class DateQuery(FieldQuery):
             # Match any date.
             clause = '1'
         return clause, subvals
+
+    def clause(self):
+        clause = super(DateQuery, self).clause()
+        logging.debug('clause: {}'.format(clause))
+        return clause
 
 
 class DurationQuery(NumericQuery):
